@@ -1,6 +1,8 @@
 var request = require('request');
 var cheerio = require('cheerio');
 var Mailgun = require('mailgun-js');
+var dateFormat = require('dateformat');
+
 require('dotenv').config();
 
 var url = 'https://www.packtpub.com/packt/offers/free-learning';
@@ -15,6 +17,9 @@ request(url, function(error, response, html) {
             domain: process.env.MAILGUN_DOMAIN
         });
 
+        var now = new Date();
+        var date = dateFormat(now, "dddd, mmmm dS, yyyy");
+
         var body =
             '<h3> PackPub Free Book of the Day</h3> <p>The title of the free book today is <strong>' +
             title + '</strong> </p> <p> Check it out here: ' + url;
@@ -22,7 +27,7 @@ request(url, function(error, response, html) {
         var data = {
             from: process.env.MAILGUN_FROM,
             to: process.env.MAILGUN_TO,
-            subject: 'PackPub Free Book of the Day',
+            subject: 'PackPub Free Book of the Day for ' + date,
             html: body
         }
 
