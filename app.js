@@ -1,0 +1,39 @@
+var request = require('request');
+var cheerio = require('cheerio');
+var Mailgun = require('mailgun-js');
+require('dotenv').config();
+
+var url = 'https://www.packtpub.com/packt/offers/free-learning';
+
+request(url, function(error, response, html) {
+    if (!error) {
+        var $ = cheerio.load(html);
+        var title = $('.dotd-title > h2').html();
+
+        var mailgun = new Mailgun({
+            apiKey: process.env.MAILGUN_API_KEY,
+            domain: process.env.MAILGUN_DOMAIN
+        });
+
+        var body =
+            '<h3> PackPub Free Book of the Day</h3> <p>The title of the free book today is <strong>' +
+            title + '</strong> </p> <p> Check it out here: ' + url;
+
+        var data = {
+            from: process.env.MAILGUN_FROM,
+            to: process.env.MAILGUN_TO,
+            subject: 'PackPub Free Book of the Day',
+            html: body
+        }
+
+        mailgun.messages().send(data, function(err, body) {
+            if (err) {
+                console.log(
+                    'Got an error trying to send email: ',
+                    err);
+            }
+
+            console.log('Mail successfully sent!');
+        });
+    }
+});
