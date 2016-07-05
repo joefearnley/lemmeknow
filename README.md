@@ -1,7 +1,7 @@
 # lemmeknow
 Let me know what the free book is today
 
-#Installation
+# Usage
 * Sign up for a free dyno on Heroku.
 * Sign up for a free Mailgun account.
 * Configure the following variables in Heroku:
