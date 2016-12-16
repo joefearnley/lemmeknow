@@ -1,5 +1,5 @@
 # lemmeknow
-Let me know what the free book is today. Scrape Packt Pub's free learning page and email me the details.
+Let me know what the free book is today. Scrape [Packt Pub's free learning page](https://www.packtpub.com/packt/offers/free-learning) and email me the details.
 
 # Usage
 * Sign up for a free dyno on Heroku.
