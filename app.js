@@ -22,26 +22,27 @@ function processResponse(error, response, html) {
             return false;
         }
         
-        let body = '<h3> PackPub Free Book of the Day</h3>' + 
-            '<p>The title of the free book today is <strong>' + title + '</strong></p>' + 
-            '<p> Check it out here: ' + url;
-
-        let now = new Date();
-        let date = dateFormat(now, "dddd, mmmm dS, yyyy");
-        let subject = 'PackPub Free Book of the Day for ' + date;
-
-        let mailData = {
-            title: title,
-            body: body,
-            subject: subject
-        };
-        
-        this.sendMail(mailData);
+        sendMail(formatMessageData(title));
         
         return true;
     }
 
     console.error('Got an error processing response: ', error);
+}
+
+function formatMessageData(title) {
+    let body = '<h3> PackPub Free Book of the Day</h3>' + 
+        '<p>The title of the free book today is <strong>' + title + '</strong></p>' + 
+        '<p> Check it out here: ' + url;
+
+    let now = new Date();
+    let subject = 'PackPub Free Book of the Day for ' + dateFormat(now, "dddd, mmmm dS, yyyy");
+
+    return {
+        title: title,
+        body: body,
+        subject: subject
+    };
 }
 
 function sendMail(args) {
