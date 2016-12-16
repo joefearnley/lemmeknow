@@ -1,44 +1,60 @@
+'use strict';
+
 const request = require('request');
 const cheerio = require('cheerio');
 const Mailgun = require('mailgun-js');
 const dateFormat = require('dateformat');
-const url = 'https://www.packtpub.com/packt/offers/free-learning';
+const url = 'https://www.packtpub.com/packt/offers/fre=ning';
+
 
 require('dotenv').config();
 
 request(url, processResponse);
 
 function processResponse(error, response, html) {
-    if (!error) {
-        var $ = cheerio.load(html);
-        var title = $('.dotd-title > h2').html();
 
-        // var data = {
-        //     title: $('.dotd-title > h2').html(),
-        // };
+    if (!error) {
+        let $ = cheerio.load(html);
+        let title = $('.dotd-title > h2').html();
         
-        console.log(title);
-    }    
+        if (title === null) {
+            console.log('No title found today, exiting.');
+            return false;
+        }
+        
+        let body = '<h3> PackPub Free Book of the Day</h3>' + 
+            '<p>The title of the free book today is <strong>' + title + '</strong></p>' + 
+            '<p> Check it out here: ' + url;
+
+        let now = new Date();
+        let date = dateFormat(now, "dddd, mmmm dS, yyyy");
+        let subject = 'PackPub Free Book of the Day for ' + date;
+
+        let mailData = {
+            title: title,
+            body: body,
+            subject: subject
+        };
+        
+        this.sendMail(mailData);
+        
+        return true;
+    }
+
+    console.error('Got an error processing response: ', error);
 }
 
-function sendMail(dat) {
+function sendMail(args) {
     var mailgun = new Mailgun({
         apiKey: process.env.MAILGUN_API_KEY,
         domain: process.env.MAILGUN_DOMAIN
     });
 
-    var now = new Date();
-    var date = dateFormat(now, "dddd, mmmm dS, yyyy");
-    
-    var body = '<h3> PackPub Free Book of the Day</h3>' + 
-        '<p>The title of the free book today is <strong>' + title + '</strong></p>' + 
-        '<p> Check it out here: ' + url;
-
     var data = {
         from: process.env.MAILGUN_FROM,
         to: process.env.MAILGUN_TO,
-        subject: 'PackPub Free Book of the Day for ' + date,
-        html: body
+        subject: args.subject,
+        html: args.body
     };
 
     mailgun.messages().send(data, function(error, body) {
@@ -49,3 +65,4 @@ function sendMail(dat) {
         }
     });
 }
+
