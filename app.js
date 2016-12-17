@@ -4,8 +4,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 const Mailgun = require('mailgun-js');
 const dateFormat = require('dateformat');
-const url = 'https://www.packtpub.com/packt/offers/fre=ning';
-
+const url = 'https://www.packtpub.com/packt/offers/free-learning';
 
 require('dotenv').config();
 
@@ -16,14 +15,15 @@ function processResponse(error, response, html) {
     if (!error) {
         let $ = cheerio.load(html);
         let title = $('.dotd-title > h2').html();
-        
+
         if (title === null) {
             console.log('No title found today, exiting.');
             return false;
         }
-        
-        sendMail(formatMessageData(title));
-        
+
+        let mailData = formatMessageData(title);
+        sendMail(mailData);
+
         return true;
     }
 
@@ -31,8 +31,8 @@ function processResponse(error, response, html) {
 }
 
 function formatMessageData(title) {
-    let body = '<h3> PackPub Free Book of the Day</h3>' + 
-        '<p>The title of the free book today is <strong>' + title + '</strong></p>' + 
+    let body = '<h3> PackPub Free Book of the Day</h3>' +
+        '<p>The title of the free book today is <strong>' + title + '</strong></p>' +
         '<p> Check it out here: ' + url;
 
     let now = new Date();
@@ -66,4 +66,3 @@ function sendMail(args) {
         }
     });
 }
-
