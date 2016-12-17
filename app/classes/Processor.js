@@ -9,10 +9,6 @@ class Processor {
         this.html = html;
     }
     
-    html() {
-        return this.html;
-    }
-    
     date() {
         let now = new Date();
         return dateFormat(now, 'dddd, mmmm dS, yyyy');
