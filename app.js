@@ -8,28 +8,24 @@ const url = 'https://www.packtpub.com/packt/offers/free-learning';
 
 require('dotenv').config();
 
-request(url, processResponse);
-
-function processResponse(error, response, html) {
-
+const processResponse = (error, response, html) => {
     if (!error) {
         const $ = cheerio.load(html);
         const title = $('.dotd-title > h2').html();
 
-        if (title === null) {
+        if (title === null || title.trim() === '') {
             console.log('No title found today, exiting.');
             return false;
         }
 
         sendMail(formatMessageData(title));
-
         return true;
     }
 
     console.error('Got an error processing response: ', error);
 }
 
-function formatMessageData(title) {
+const formatMessageData = (title) => {
     const body = `
         <h3> PackPub Free Book of the Day</h3>
         <p>The title of the free book today is <strong>${title}</strong></p>
@@ -45,7 +41,7 @@ function formatMessageData(title) {
     };
 }
 
-function sendMail(args) {
+const sendMail = (args) => {
     const mailgun = new Mailgun({
         apiKey: process.env.MAILGUN_API_KEY,
         domain: process.env.MAILGUN_DOMAIN
@@ -61,8 +57,11 @@ function sendMail(args) {
     mailgun.messages().send(data, (error, body) => {
         if (error) {
             console.log('Got an error trying to send email: ', error);
-        } else {
-            console.log('Mail successfully sent!');
+            return;
         }
+
+        console.log('Mail successfully sent!');
     });
 }
+
+request(url, processResponse);
