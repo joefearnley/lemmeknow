@@ -62,7 +62,7 @@ const sendMail = (args) => {
 
     mailgun.messages().send(data, (error, body) => {
         if (error) {
-            console.log('Got an error trying to send email: ', error);
+            console.log(`Got an error trying to send email: ${error}`);
             return;
         }
 
