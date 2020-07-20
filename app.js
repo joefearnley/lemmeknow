@@ -1,6 +1,5 @@
 'use strict';
 
-const request = require('request');
 const cheerio = require('cheerio');
 const Mailgun = require('mailgun-js');
 const dateFormat = require('dateformat');
@@ -8,7 +7,6 @@ const phantom = require('phantom');
 const url = 'https://www.packtpub.com/free-learning';
 
 require('dotenv').config();
-
 
 phantom.create().then(function(ph) {
     ph.createPage().then(function(page) {
@@ -71,5 +69,3 @@ const sendMail = (args) => {
         console.log('Mail successfully sent!');
     });
 }
-
-request(url, processResponse);
