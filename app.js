@@ -9,6 +9,7 @@ const url = 'https://www.packtpub.com/free-learning';
 
 require('dotenv').config();
 
+
 phantom.create().then(function(ph) {
     ph.createPage().then(function(page) {
          page.open(url).then(function(status) {
@@ -18,7 +19,7 @@ phantom.create().then(function(ph) {
                     .html()
                     .replace('Free eBook:  ','');
 
-                if (title === null) {
+                if (title === null || title.trim() === '') {
                     console.log('No title found today, exiting.');
                     return false;
                 }
@@ -32,7 +33,7 @@ phantom.create().then(function(ph) {
     });
 });
 
-function formatMessageData(title) {
+const formatMessageData = (title) => {
     const body = `
         <h3> PackPub Daily Free eBook</h3>
         <p>The title of the free book today is <strong>${title}</strong></p>
@@ -48,7 +49,7 @@ function formatMessageData(title) {
     };
 }
 
-function sendMail(args) {
+const sendMail = (args) => {
     const mailgun = new Mailgun({
         apiKey: process.env.MAILGUN_API_KEY,
         domain: process.env.MAILGUN_DOMAIN
@@ -64,8 +65,11 @@ function sendMail(args) {
     mailgun.messages().send(data, (error, body) => {
         if (error) {
             console.log('Got an error trying to send email: ', error);
-        } else {
-            console.log('Mail successfully sent!');
+            return;
         }
+
+        console.log('Mail successfully sent!');
     });
 }
+
+request(url, processResponse);
