@@ -33,12 +33,12 @@ phantom.create().then(function(ph) {
 
 const formatMessageData = (title) => {
     const body = `
-        <h3> PackPub Daily Free eBook</h3>
+        <h3>PacktPub Daily Free eBook</h3>
         <p>The title of the free book today is <strong>${title}</strong></p>
-        <p> Check it out here: ${url}
+        <p> Check it out here: ${url}</p>
     `;
 
-    const subject = `PackPub Free Book of the Day for ${dateFormat(new Date(), "dddd, mmmm dS, yyyy")}`;
+    const subject = `PacktPub Free Book of the Day for ${dateFormat(new Date(), "dddd, mmmm dS, yyyy")}`;
 
     return {
         title: title,
