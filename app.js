@@ -15,12 +15,8 @@ const formatMessageData = title => {
         <p> Check it out here: ${url}</p>
     `;
 
-<<<<<<< HEAD
-    const subject = `PacktPub Free Book of the Day for ${dateFormat(new Date(), "dddd, mmmm dS, yyyy")}`;
-=======
     const date = dateFormat(new Date(), "dddd, mmmm dS, yyyy");
     const subject = `PackPub Free Book of the Day for ${date}`;
->>>>>>> 556bf23d359908c631bd4e4722e00e584563d168
 
     return {
         title,
